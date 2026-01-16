@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Un detalle para ti</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #0f172a;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sobre {
+            position: relative;
+            width: min(320px, 85vw);
+            height: 200px;
+            background: #1e293b;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            cursor: pointer;
+            margin-top: 0;
+        }
+
+        .tapa {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            border-left: min(160px, 42.5vw) solid transparent;
+            border-right: min(160px, 42.5vw) solid transparent;
+            border-top: 115px solid #334155;
+            transform-origin: top center;
+            transition: transform 0.6s ease;
+            z-index: 3;
+        }
+
+        .carta {
+            position: absolute;
+            bottom: 12px;
+            left: 5%;
+            width: 90%;
+            height: 160px;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px 16px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            overflow: hidden;
+            transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 2;
+        }
+
+        .carta-contenido {
+            text-align: center;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .carta h2 {
+            font-family: 'Playfair Display', serif;
+            color: #1e293b;
+            font-size: clamp(1.3rem, 4vw, 1.6rem);
+            margin-bottom: 15px;
+            border-bottom: 2px solid #fbbf24;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .carta p {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: clamp(0.95rem, 3.5vw, 1.05rem);
+            line-height: 1.7;
+            color: #334155;
+            margin: 8px 0;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.6s ease;
+        }
+
+        .carta p.final {
+            margin-top: 18px;
+            font-weight: 600;
+            color: #b58900;
+        }
+
+        /* ESTADO ABIERTO */
+        .sobre.abierto .tapa {
+            transform: rotateX(180deg);
+        }
+
+        .sobre.abierto .carta {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            bottom: auto;
+            width: 90vw;
+            max-width: 500px;
+            height: auto;
+            min-height: 70vh;
+            max-height: 85vh;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            padding: 40px 30px;
+            z-index: 5;
+            overflow-y: auto;
+        }
+
+        .sobre.abierto .carta p {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .instruccion {
+            position: absolute;
+            bottom: -65px;
+            width: 100%;
+            text-align: center;
+            color: #fbbf24;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: pulsar 2s ease-in-out infinite;
+            transition: opacity 0.3s;
+        }
+
+        .sobre.abierto .instruccion {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes pulsar {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .particula {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: #fbbf24;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 100;
+            animation: volar 1.5s ease-out forwards;
+        }
+
+        @keyframes volar {
+            to {
+                transform: translate(var(--x), var(--y)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* RESPONSIVE */
+        @media (max-height: 700px) {
+            .sobre.abierto .carta {
+                min-height: 65vh;
+                padding: 35px 25px;
+            }
+        }
+
+        @media (max-height: 650px) {
+            .sobre.abierto .carta {
+                min-height: 60vh;
+                padding: 30px 22px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .carta {
+                padding: 18px 14px;
+            }
+            
+            .sobre.abierto .carta {
+                padding: 35px 22px;
+                width: 92vw;
+            }
+        }
+        
+        @media (min-height: 700px) {
+            .sobre.abierto .carta {
+                min-height: 75vh;
+                padding: 45px 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div class="container">
+        <div class="sobre" id="sobre">
+            <div class="tapa"></div>
+            <div class="carta">
+                <div class="carta-contenido">
+                    <h2>Buen día,</h2>
+                    <p style="transition-delay: 0.5s;">El mundo se detiene un instante,</p>
+                    <p style="transition-delay: 0.9s;">para admirar la luz que desprendes.</p>
+                    <p style="transition-delay: 1.3s;">No hace falta sol si estás delante,</p>
+                    <p style="transition-delay: 1.7s;">pues con tu brillo todo lo enciendes.</p>
+                    <p class="final" style="transition-delay: 2.1s;">Que hoy sea tan increíble como tú. ✨</p>
+                </div>
+            </div>
+            <div class="instruccion">Toca para abrir</div>
+        </div>
+    </div>
+
+    <script>
+        // Estrellas de fondo
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let estrellas = [];
+
+        function iniciarCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            estrellas = [];
+            for (let i = 0; i < 100; i++) {
+                estrellas.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radio: Math.random() * 2,
+                    velocidad: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        function dibujarEstrellas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(251, 191, 36, 0.4)';
+            estrellas.forEach(e => {
+                ctx.beginPath();
+                ctx.arc(e.x, e.y, e.radio, 0, Math.PI * 2);
+                ctx.fill();
+                e.y -= e.velocidad;
+                if (e.y < 0) e.y = canvas.height;
+            });
+            requestAnimationFrame(dibujarEstrellas);
+        }
+
+        // Abrir sobre
+        const sobre = document.getElementById('sobre');
+        sobre.addEventListener('click', function() {
+            const abriendo = !this.classList.contains('abierto');
+            this.classList.toggle('abierto');
+            
+            if (abriendo) {
+                crearParticulas();
+            }
+        });
+
+        function crearParticulas() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const p = document.createElement('div');
+                    p.className = 'particula';
+                    const angulo = (Math.PI * 2 * i) / 30;
+                    const distancia = 100 + Math.random() * 150;
+                    p.style.setProperty('--x', Math.cos(angulo) * distancia + 'px');
+                    p.style.setProperty('--y', Math.sin(angulo) * distancia + 'px');
+                    p.style.left = window.innerWidth / 2 + 'px';
+                    p.style.top = window.innerHeight / 2 + 'px';
+                    document.body.appendChild(p);
+                    setTimeout(() => p.remove(), 1500);
+                }, i * 20);
+            }
+        }
+
+        iniciarCanvas();
+        dibujarEstrellas();
+        window.addEventListener('resize', iniciarCanvas);
+    </script>
+</body>
+</html>
